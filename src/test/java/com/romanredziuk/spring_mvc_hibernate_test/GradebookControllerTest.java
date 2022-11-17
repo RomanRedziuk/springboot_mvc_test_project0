@@ -54,9 +54,9 @@ public class GradebookControllerTest {
     @BeforeAll
     public static void setup(){
         request = new MockHttpServletRequest();
-        request.setParameter("firstname", "Bill");
-        request.setParameter("lastname", "Clinton");
-        request.setParameter("emailAddress", "bill.clinton@gmail.com");
+        request.setParameter("firstname", "George");
+        request.setParameter("lastname", "Bush");
+        request.setParameter("emailAddress", "george.bush@gmail.com");
 
     }
 
@@ -108,6 +108,35 @@ public class GradebookControllerTest {
         CollegeStudent verifyStudent = studentDAO.findByEmailAddress("roman.redziuk@gmail.com");
 
         assertNotNull(verifyStudent, "Student should be found");
+    }
+
+    @Test
+    public void deleteStudentHttpRequest() throws Exception{
+
+        assertTrue(studentDAO.findById(1).isPresent());
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/delete/student/{id}",1)).andExpect(status().isOk()).andReturn();
+
+        ModelAndView mav = mvcResult.getModelAndView();
+
+        ModelAndViewAssert.assertViewName(mav, "index");
+
+        assertFalse(studentDAO.findById(1).isPresent());
+
+    }
+
+
+    @Test
+    public void deleteStudentHttpRequestErrorPage() throws Exception{
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/delete/student/{id}", 0))
+                .andExpect(status().isOk()).andReturn();
+
+        ModelAndView mav = mvcResult.getModelAndView();
+
+        ModelAndViewAssert.assertViewName(mav, "error");
     }
 
     @AfterEach
