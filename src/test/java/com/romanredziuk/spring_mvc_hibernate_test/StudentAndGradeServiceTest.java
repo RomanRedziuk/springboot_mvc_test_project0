@@ -40,11 +40,11 @@ public class StudentAndGradeServiceTest {
     @Test
     public void createStudentService(){
 
-        studentService.createStudent("Roman", "Redziuk", "roman.redziuk@gmail.com");
+        studentService.createStudent("George", "Bush", "george.bush@gmail.com");
 
-        CollegeStudent student = studentDAO.findByEmailAddress("roman.redziuk@gmail.com");
+        CollegeStudent student = studentDAO.findByEmailAddress("george.bush@gmail.com");
 
-        assertEquals("roman.redziuk@gmail.com", student.getEmailAddress(), "find by email");
+        assertEquals("george.bush@gmail.com", student.getEmailAddress(), "find by email");
     }
 
     @Test

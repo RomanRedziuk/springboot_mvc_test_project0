@@ -2,6 +2,7 @@ package com.romanredziuk.spring_mvc_hibernate_test.controller;
 
 import com.romanredziuk.spring_mvc_hibernate_test.models.*;
 import com.romanredziuk.spring_mvc_hibernate_test.models.Gradebook;
+import com.romanredziuk.spring_mvc_hibernate_test.service.StudentAndGradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,12 +14,24 @@ public class GradebookController {
 	@Autowired
 	private Gradebook gradebook;
 
+	@Autowired
+	private StudentAndGradeService studentService;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getStudents(Model m) {
+		Iterable<CollegeStudent> collegeStudents = studentService.getGradebook();
+		m.addAttribute("students", collegeStudents);
 		return "index";
 	}
 
+	@PostMapping(value = "/")
+	public String createStudent(@ModelAttribute("student")CollegeStudent student, Model m){
+		studentService.createStudent(student.getFirstname(), student.getLastname(),student.getEmailAddress());
+
+		Iterable<CollegeStudent> collegeStudents = studentService.getGradebook();
+		m.addAttribute("students", collegeStudents);
+		return "index";
+	}
 
 	@GetMapping("/studentInformation/{id}")
 		public String studentInformation(@PathVariable int id, Model m) {
