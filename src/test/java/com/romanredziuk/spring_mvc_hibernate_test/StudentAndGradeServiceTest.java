@@ -1,6 +1,12 @@
 package com.romanredziuk.spring_mvc_hibernate_test;
 
 import com.romanredziuk.spring_mvc_hibernate_test.models.CollegeStudent;
+import com.romanredziuk.spring_mvc_hibernate_test.models.HistoryGrade;
+import com.romanredziuk.spring_mvc_hibernate_test.models.MathGrade;
+import com.romanredziuk.spring_mvc_hibernate_test.models.ScienceGrade;
+import com.romanredziuk.spring_mvc_hibernate_test.repository.HistoryGradeDAO;
+import com.romanredziuk.spring_mvc_hibernate_test.repository.MathGradeDAO;
+import com.romanredziuk.spring_mvc_hibernate_test.repository.ScienceGradeDAO;
 import com.romanredziuk.spring_mvc_hibernate_test.repository.StudentDAO;
 import com.romanredziuk.spring_mvc_hibernate_test.service.StudentAndGradeService;
 import org.junit.jupiter.api.AfterEach;
@@ -30,6 +36,15 @@ public class StudentAndGradeServiceTest {
 
     @Autowired
     StudentDAO studentDAO;
+
+    @Autowired
+    MathGradeDAO mathGradeDAO;
+
+    @Autowired
+    ScienceGradeDAO scienceGradeDAO;
+
+    @Autowired
+    HistoryGradeDAO historyGradeDAO;
 
     @BeforeEach
     public void setupDatabase(){
@@ -82,6 +97,21 @@ public class StudentAndGradeServiceTest {
         }
 
         assertEquals(5, collegeStudentList.size());
+    }
+
+    @Test
+    public void createGradeService(){
+        assertTrue(studentService.createGrade(80.50, 1, "math"));
+        assertTrue(studentService.createGrade(80.50, 1, "science"));
+        assertTrue(studentService.createGrade(80.50, 1, "history"));
+
+        Iterable<MathGrade> mathGrades = mathGradeDAO.findGradeByStudentId(1);
+        Iterable<ScienceGrade> scienceGrades = scienceGradeDAO.findGradeByStudentId(1);
+        Iterable<HistoryGrade> historyGrades = historyGradeDAO.findGradeByStudentId(1);
+
+        assertTrue(mathGrades.iterator().hasNext(), "Student has math grades.");
+        assertTrue(scienceGrades.iterator().hasNext(), "Student has science grades.");
+        assertTrue(historyGrades.iterator().hasNext(), "Student has history grades.");
     }
 
     @AfterEach
